@@ -16,9 +16,9 @@ namespace Application.Service
     public class UserService : IUserService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IConfiguration _configuration;
+        private readonly AppConfiguration _configuration;
         private readonly ICurrentTime _currentTime;
-        public UserService(IUnitOfWork unitOfWork, IConfiguration configuration, ICurrentTime currentTime)
+        public UserService(IUnitOfWork unitOfWork, AppConfiguration configuration, ICurrentTime currentTime)
         {
             _unitOfWork = unitOfWork;
             _configuration=configuration;
@@ -37,7 +37,7 @@ namespace Application.Service
                 throw new Exception("Password incorrect");
             }
             var refreshToken = RefreshTokenString.GetRefreshToken();
-            var accessToken = user.GenerateJsonWebToken(_configuration.GetSection("AppSetting:Token").Value!, _currentTime.GetCurrentTime());
+            var accessToken = user.GenerateJsonWebToken(_configuration!.JWTSecretKey, _currentTime.GetCurrentTime());
             var expireRefreshTokenTime = DateTime.Now.AddHours(24);
 
             user.RefreshToken = refreshToken;
