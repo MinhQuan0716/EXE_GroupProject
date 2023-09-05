@@ -1,8 +1,7 @@
 using Application.Common;
-using EXE201;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
-using System.Reflection;
+using WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,14 +24,9 @@ builder.Services.AddCors(options =>
                    .AllowAnyHeader();
         });
 });
+builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
-    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "Backend API", Version = "v1" });
-
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    opt.IncludeXmlComments(xmlPath);
-
     opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         In = ParameterLocation.Header,
@@ -42,7 +36,6 @@ builder.Services.AddSwaggerGen(opt =>
         BearerFormat = "JWT",
         Scheme = "bearer"
     });
-
     opt.AddSecurityRequirement(new OpenApiSecurityRequirement
         {
             {
@@ -56,11 +49,10 @@ builder.Services.AddSwaggerGen(opt =>
                 },
                 new string[]{}
             }
-        });
+     });
 });
-
 var app = builder.Build();
-
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -71,7 +63,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 app.MapControllers();
 
 app.Run();
