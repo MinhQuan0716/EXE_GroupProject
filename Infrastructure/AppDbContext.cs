@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+
 namespace Infrastructure
 {
     public class AppDbContext:DbContext
@@ -24,6 +26,7 @@ namespace Infrastructure
         public DbSet<Suggestion> Suggestions { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
