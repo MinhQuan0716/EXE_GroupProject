@@ -31,11 +31,7 @@ namespace WebAPI
                        ClockSkew = TimeSpan.FromSeconds(1)
                    };
                });
-            services.AddControllers()
-             .AddJsonOptions(options =>
-             {
-                 options.JsonSerializerOptions.Converters.Add(new Application.ViewModel.DateTimeConverter());
-             });
+          
             return services;
         }
     }
