@@ -2,9 +2,11 @@
 using Application.Service;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel;
 using System.Text;
+using System.Text.Json.Serialization;
 using WebAPI.WebService;
-
+using Application.ViewModel;
 namespace WebAPI
 {
     public static  class DependencyInjection
@@ -29,6 +31,11 @@ namespace WebAPI
                        ClockSkew = TimeSpan.FromSeconds(1)
                    };
                });
+            services.AddControllers()
+             .AddJsonOptions(options =>
+             {
+                 options.JsonSerializerOptions.Converters.Add(new Application.ViewModel.DateTimeConverter());
+             });
             return services;
         }
     }

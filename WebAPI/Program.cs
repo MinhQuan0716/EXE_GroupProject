@@ -1,4 +1,5 @@
 using Application.Common;
+using Application.SchemaFilter;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
 using WebAPI;
@@ -50,6 +51,7 @@ builder.Services.AddSwaggerGen(opt =>
                 new string[]{}
             }
      });
+    opt.SchemaFilter<RegisterSchemaFilter>();
 });
 builder.Services.AddSingleton(configuration);
 var app = builder.Build();

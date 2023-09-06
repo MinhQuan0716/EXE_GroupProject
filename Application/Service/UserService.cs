@@ -65,7 +65,7 @@ namespace Application.Service
                 UserName = registerModel.UserName,
                 Email = registerModel.Email,
                 Password = registerModel.Password.Hash(),
-                BirthDay = registerModel.BirthDay,
+                BirthDay =DateTime.Parse(registerModel.BirthDay),
                 RoleId=2
             };
             await _unitOfWork.UserRepository.AddAsync(newUser); 
