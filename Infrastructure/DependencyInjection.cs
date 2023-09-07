@@ -23,6 +23,9 @@ namespace Infrastructure
             
             services.AddSingleton<ICurrentTime, CurrentTime>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ICareerQuizRepository, CareerQuizRepository>();
+            services.AddScoped<IQuizOptionRepository, QuizOptionRepository>();
+            services.AddScoped<IQuizTypeRepository, QuizTypeRepository>();  
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddDbContext<AppDbContext>(options =>
             {

@@ -16,17 +16,17 @@ namespace Infrastructure.FluentAPI
             builder.HasData(new QuizType
             {
                TypeId=1,
-               TypeName="R",
+               TypeName= "Realistic",
             },
              new QuizType
              {
                  TypeId = 2,
-                 TypeName = "I",
+                 TypeName = "Artistic",
              },
              new QuizType
              {
                  TypeId = 3,
-                 TypeName = "E",
+                 TypeName = "Conventional",
              }
              );
         }

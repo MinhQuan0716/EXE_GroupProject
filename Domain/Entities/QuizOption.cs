@@ -9,8 +9,9 @@ namespace Domain.Entities
     public  class QuizOption:BaseEntity
     {
         public int InterestLevel { get; set; }
-        public Guid? CareerQuiz { get; set; }
+        public Guid? CareerQuizId { get; set; }
         public CareerQuiz Career { get; set; }
         public ICollection<UserResponse> Responses { get; set; }
+        
     }
 }

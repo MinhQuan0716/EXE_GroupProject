@@ -10,5 +10,7 @@ namespace Domain.Entities
     {
         public string QuizText { get; set; }
         public ICollection<QuizOption> QuizOptions { get; set; }
+        public int TypeId { get; set; }
+        public QuizType QuizType { get; set; }  
     }
 }

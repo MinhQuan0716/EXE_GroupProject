@@ -17,5 +17,7 @@ namespace Domain.Entities
         public DateTime? ExpireTokenTime { get; set; }
         public Role Role { get; set; }
         public int RoleId { get; set; }
+        public ICollection<Suggestion> Suggestions { get; set; }
+        public ICollection<UserResponse > UserResponses { get; set; }
     }
 }

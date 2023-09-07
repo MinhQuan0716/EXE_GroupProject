@@ -14,6 +14,9 @@ namespace Infrastructure.FluentAPI
         public void Configure(EntityTypeBuilder<Suggestion> builder)
         {
             builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            builder.Property(x => x.suggestionContent).HasColumnType("nvarchar(max)");
+            builder.HasOne(x=>x.User).WithMany(x=>x.Suggestions).HasForeignKey(x=>x.UserId);
+            builder.HasOne(x => x.Major).WithMany(x => x.Suggestions).HasForeignKey(x => x.MajorId);
         }
     }
 }

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class TestAmazon : Migration
+    public partial class ModifyQuizType : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -59,7 +59,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     QuizText = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    QuizTypeTypeId = table.Column<int>(type: "int", nullable: true),
+                    TypeId = table.Column<int>(type: "int", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletetionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -72,10 +72,11 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_CareerQuizzes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CareerQuizzes_QuizTypes_QuizTypeTypeId",
-                        column: x => x.QuizTypeTypeId,
+                        name: "FK_CareerQuizzes_QuizTypes_TypeId",
+                        column: x => x.TypeId,
                         principalTable: "QuizTypes",
-                        principalColumn: "TypeId");
+                        principalColumn: "TypeId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,8 +116,7 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
                     InterestLevel = table.Column<int>(type: "int", nullable: false),
-                    CareerQuiz = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CareerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CareerQuizId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletetionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -129,8 +129,8 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_QuizOptions", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_QuizOptions_CareerQuizzes_CareerId",
-                        column: x => x.CareerId,
+                        name: "FK_QuizOptions_CareerQuizzes_CareerQuizId",
+                        column: x => x.CareerQuizId,
                         principalTable: "CareerQuizzes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -141,8 +141,9 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    MajorId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MajorId = table.Column<int>(type: "int", nullable: false),
+                    suggestionContent = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletetionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -158,12 +159,14 @@ namespace Infrastructure.Migrations
                         name: "FK_Suggestions_Major_MajorId",
                         column: x => x.MajorId,
                         principalTable: "Major",
-                        principalColumn: "MajorId");
+                        principalColumn: "MajorId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Suggestions_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -171,9 +174,8 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false, defaultValueSql: "NEWID()"),
-                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SelectedOptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    SelectOptionId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ModificationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     DeletetionDate = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -186,16 +188,16 @@ namespace Infrastructure.Migrations
                 {
                     table.PrimaryKey("PK_UserResponses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserResponses_QuizOptions_SelectOptionId",
-                        column: x => x.SelectOptionId,
+                        name: "FK_UserResponses_QuizOptions_SelectedOptionId",
+                        column: x => x.SelectedOptionId,
                         principalTable: "QuizOptions",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_UserResponses_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
@@ -213,9 +215,9 @@ namespace Infrastructure.Migrations
                 columns: new[] { "TypeId", "TypeName" },
                 values: new object[,]
                 {
-                    { 1, "R" },
-                    { 2, "I" },
-                    { 3, "E" }
+                    { 1, "Realistic" },
+                    { 2, "Artistic" },
+                    { 3, "Conventional" }
                 });
 
             migrationBuilder.InsertData(
@@ -228,14 +230,14 @@ namespace Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CareerQuizzes_QuizTypeTypeId",
+                name: "IX_CareerQuizzes_TypeId",
                 table: "CareerQuizzes",
-                column: "QuizTypeTypeId");
+                column: "TypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_QuizOptions_CareerId",
+                name: "IX_QuizOptions_CareerQuizId",
                 table: "QuizOptions",
-                column: "CareerId");
+                column: "CareerQuizId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Suggestions_MajorId",
@@ -248,9 +250,9 @@ namespace Infrastructure.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserResponses_SelectOptionId",
+                name: "IX_UserResponses_SelectedOptionId",
                 table: "UserResponses",
-                column: "SelectOptionId");
+                column: "SelectedOptionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserResponses_UserId",

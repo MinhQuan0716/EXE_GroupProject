@@ -14,6 +14,7 @@ namespace Infrastructure.FluentAPI
         public void Configure(EntityTypeBuilder<CareerQuiz> builder)
         {
             builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            builder.HasOne(x=>x.QuizType).WithMany(x=>x.CareerQuizzes).HasForeignKey(x=>x.TypeId);
         }
     }
 }

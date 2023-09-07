@@ -2,13 +2,16 @@ using Application.Common;
 using Application.SchemaFilter;
 using Infrastructure;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Text.Json.Serialization;
 using WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+ options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -52,8 +55,10 @@ builder.Services.AddSwaggerGen(opt =>
             }
      });
     opt.SchemaFilter<RegisterSchemaFilter>();
+    
 });
 builder.Services.AddSingleton(configuration);
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -68,12 +73,30 @@ app.UseCors();
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API"));
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API");
+
+        // Add dropdown menus for enum parameters
+        c.DefaultModelRendering(ModelRendering.Example);
+        c.DisplayRequestDuration();
+        c.DocExpansion(DocExpansion.None);
+    });
+
 }
 if (app.Environment.IsProduction())
 {
     app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API"));
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API");
+
+        // Add dropdown menus for enum parameters
+        c.DefaultModelRendering(ModelRendering.Example);
+        c.DisplayRequestDuration();
+        c.DocExpansion(DocExpansion.None);
+        
+    });
 }
 
 

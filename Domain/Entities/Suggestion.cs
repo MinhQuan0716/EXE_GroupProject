@@ -12,5 +12,6 @@ namespace Domain.Entities
         public User User { get; set; }
         public int? MajorId { get; set; }
         public Major Major { get; set; }
+        public string suggestionContent { get; set; }
     }
 }

@@ -9,12 +9,13 @@ using WebAPI.WebService;
 using Application.ViewModel;
 namespace WebAPI
 {
-    public static  class DependencyInjection
+    public static class DependencyInjection
     {
-        public static IServiceCollection AddWebAPI(this IServiceCollection services,string secretKey) 
+        public static IServiceCollection AddWebAPI(this IServiceCollection services, string secretKey)
         {
             services.AddScoped<IClaimService, ClaimService>();
-            services.AddScoped<IUserService,UserService>(); 
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICareerQuizService, CareerQuizService>();
             services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>
@@ -31,9 +32,8 @@ namespace WebAPI
                        ClockSkew = TimeSpan.FromSeconds(1)
                    };
                });
-          
             return services;
         }
     }
-    }
+}
 

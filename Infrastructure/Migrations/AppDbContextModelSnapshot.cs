@@ -54,12 +54,12 @@ namespace Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("QuizTypeTypeId")
+                    b.Property<int>("TypeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuizTypeTypeId");
+                    b.HasIndex("TypeId");
 
                     b.ToTable("CareerQuizzes");
                 });
@@ -112,10 +112,8 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uniqueidentifier")
                         .HasDefaultValueSql("NEWID()");
 
-                    b.Property<Guid>("CareerId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CareerQuiz")
+                    b.Property<Guid?>("CareerQuizId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedBy")
@@ -144,7 +142,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CareerId");
+                    b.HasIndex("CareerQuizId");
 
                     b.ToTable("QuizOptions");
                 });
@@ -169,17 +167,17 @@ namespace Infrastructure.Migrations
                         new
                         {
                             TypeId = 1,
-                            TypeName = "R"
+                            TypeName = "Realistic"
                         },
                         new
                         {
                             TypeId = 2,
-                            TypeName = "I"
+                            TypeName = "Artistic"
                         },
                         new
                         {
                             TypeId = 3,
-                            TypeName = "E"
+                            TypeName = "Conventional"
                         });
                 });
 
@@ -235,6 +233,7 @@ namespace Infrastructure.Migrations
                         .HasColumnType("bit");
 
                     b.Property<int?>("MajorId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<Guid?>("ModificationBy")
@@ -244,7 +243,12 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<Guid?>("UserId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("suggestionContent")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -345,18 +349,16 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime?>("ModificationDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("SelectOptionId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("SelectedOptionId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("UserId")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SelectOptionId");
+                    b.HasIndex("SelectedOptionId");
 
                     b.HasIndex("UserId");
 
@@ -365,16 +367,20 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.CareerQuiz", b =>
                 {
-                    b.HasOne("Domain.Entities.QuizType", null)
+                    b.HasOne("Domain.Entities.QuizType", "QuizType")
                         .WithMany("CareerQuizzes")
-                        .HasForeignKey("QuizTypeTypeId");
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("QuizType");
                 });
 
             modelBuilder.Entity("Domain.Entities.QuizOption", b =>
                 {
                     b.HasOne("Domain.Entities.CareerQuiz", "Career")
                         .WithMany("QuizOptions")
-                        .HasForeignKey("CareerId")
+                        .HasForeignKey("CareerQuizId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -385,11 +391,15 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.Major", "Major")
                         .WithMany("Suggestions")
-                        .HasForeignKey("MajorId");
+                        .HasForeignKey("MajorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("Suggestions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Major");
 
@@ -411,13 +421,13 @@ namespace Infrastructure.Migrations
                 {
                     b.HasOne("Domain.Entities.QuizOption", "SelectOption")
                         .WithMany("Responses")
-                        .HasForeignKey("SelectOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SelectedOptionId");
 
                     b.HasOne("Domain.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .WithMany("UserResponses")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("SelectOption");
 
@@ -447,6 +457,13 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.Role", b =>
                 {
                     b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Domain.Entities.User", b =>
+                {
+                    b.Navigation("Suggestions");
+
+                    b.Navigation("UserResponses");
                 });
 #pragma warning restore 612, 618
         }

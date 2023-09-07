@@ -14,6 +14,8 @@ namespace Infrastructure.FluentAPI
         public void Configure(EntityTypeBuilder<UserResponse> builder)
         {
             builder.Property(x => x.Id).HasDefaultValueSql("NEWID()");
+            builder.HasOne(x => x.User).WithMany(x => x.UserResponses).HasForeignKey(x => x.UserId);
+            builder.HasOne(x=>x.SelectOption).WithMany(x=>x.Responses).HasForeignKey(x => x.SelectedOptionId);
         }
     }
 }
