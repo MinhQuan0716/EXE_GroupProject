@@ -12,26 +12,27 @@ namespace Application.Service
     public class CareerQuizService : ICareerQuizService
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CareerQuizService (IUnitOfWork unitOfWork)
+        public CareerQuizService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
+
         public async Task<bool> CreateQuiz(CreateCareerQuizModel createCareerQuizModel)
         {
             int typeId = await _unitOfWork.QuizTypeRepository.GetTypeIdByName(createCareerQuizModel.QuizType.ToString());
             var question = new CareerQuiz
             {
-                QuizText=createCareerQuizModel.QuizText,
-                TypeId=typeId
+                QuizText = createCareerQuizModel.QuizText,
+                TypeId = typeId
             };
-         await    _unitOfWork.CareerQuizRepository.AddAsync(question);
-         await _unitOfWork.SaveChangeAsync();
-          await  _unitOfWork.CareerQuizRepository.GetlastSavedQuiz();
-            List<QuizOption >options= new List<QuizOption>();
+            await _unitOfWork.CareerQuizRepository.AddAsync(question);
+            await _unitOfWork.SaveChangeAsync();
+            await _unitOfWork.CareerQuizRepository.GetlastSavedQuiz();
+            List<QuizOption> options = new List<QuizOption>();
             QuizOption quizOption1 = new QuizOption
             {
-                InterestLevel=1,
-                CareerQuizId=question.Id,   
+                InterestLevel = 1,
+                CareerQuizId = question.Id,
             };
             QuizOption quizOption2 = new QuizOption
             {
