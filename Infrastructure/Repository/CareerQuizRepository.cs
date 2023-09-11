@@ -1,5 +1,6 @@
 ﻿using Application.InterfaceRepository;
 using Application.InterfaceService;
+using Application.ViewModel.QuizModel;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,6 +21,19 @@ namespace Infrastructure.Repository
             _appDbContext= dbContext;
             _currentTime= timeService;
             _claimService= claimsService;
+        }
+
+        public async Task<List<ViewCareerQuizModel>> GetAllQuiz()
+        {
+          List<ViewCareerQuizModel> quizList = await _appDbContext.CareerQuizzes.Include(x=>x.QuizOptions)
+                .Where(x=>x.IsDelete==false)
+                .Select(
+                  x => new ViewCareerQuizModel
+               {
+                   Question=x.QuizText,
+                   Option= x.QuizOptions.OrderBy(x=>x.InterestLevel).Select(x=>x.InterestLevel).ToList(),
+               }).ToListAsync();
+            return quizList;
         }
 
         public async Task<CareerQuiz> GetlastSavedQuiz()

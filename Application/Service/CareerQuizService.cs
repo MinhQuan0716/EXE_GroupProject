@@ -1,5 +1,5 @@
 ﻿using Application.InterfaceService;
-using Application.ViewModel;
+using Application.ViewModel.QuizModel;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,8 @@ namespace Application.Service
             var question = new CareerQuiz
             {
                 QuizText=createCareerQuizModel.QuizText,
-                TypeId=typeId
+                TypeId=typeId,
+                IsDelete=false,
             };
          await    _unitOfWork.CareerQuizRepository.AddAsync(question);
          await _unitOfWork.SaveChangeAsync();
@@ -58,8 +59,13 @@ namespace Application.Service
             options.Add(quizOption3);
             options.Add(quizOption4);
             options.Add(quizOption5);
-            _unitOfWork.QuizOptionRepository.AddRangeAsync(options);
+          await  _unitOfWork.QuizOptionRepository.AddRangeAsync(options);
             return await _unitOfWork.SaveChangeAsync() > 0;
+        }
+
+        public async Task<List<ViewCareerQuizModel>> GetAllQuiz()
+        {
+            return await _unitOfWork.CareerQuizRepository.GetAllQuiz();
         }
     }
 }
