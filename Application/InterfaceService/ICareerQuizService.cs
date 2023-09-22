@@ -10,6 +10,7 @@ namespace Application.InterfaceService
     public  interface ICareerQuizService
     {
         Task<bool> CreateQuiz(CreateCareerQuizModel createCareerQuizModel);
-        Task<List<ViewCareerQuizModel >> GetAllQuiz();  
+        Task<List<ViewCareerQuizModel >> GetAllQuiz();
+        Task<bool> DeleteQuiz(Guid quizId);
     }
 }

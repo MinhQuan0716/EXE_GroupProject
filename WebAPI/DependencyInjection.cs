@@ -16,6 +16,7 @@ namespace WebAPI
             services.AddScoped<IClaimService, ClaimService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICareerQuizService, CareerQuizService>();
+            services.AddScoped<IUserResopnseService,UserResponseService>();
             services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>

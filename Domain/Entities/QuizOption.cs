@@ -10,7 +10,7 @@ namespace Domain.Entities
     {
         public int InterestLevel { get; set; }
         public Guid? CareerQuizId { get; set; }
-        public CareerQuiz Career { get; set; }
+        public CareerQuiz CareerQuiz { get; set; }
         public ICollection<UserResponse> Responses { get; set; }
         
     }

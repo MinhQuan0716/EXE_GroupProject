@@ -24,6 +24,7 @@ namespace Infrastructure
         public DbSet<QuizOption> QuizOptions { get; set; }
         public DbSet<UserResponse> UserResponses { get; set; }
         public DbSet<Suggestion> Suggestions { get; set; }
+        public DbSet<Major> Major { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             

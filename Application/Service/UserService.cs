@@ -66,7 +66,8 @@ namespace Application.Service
                 Email = registerModel.Email,
                 Password = registerModel.Password.Hash(),
                 BirthDay =DateTime.Parse(registerModel.BirthDay),
-                RoleId=2
+                RoleId=2,
+                IsDelete= false,
             };
             await _unitOfWork.UserRepository.AddAsync(newUser); 
             return await _unitOfWork.SaveChangeAsync()>0;
