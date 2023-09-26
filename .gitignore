@@ -395,7 +395,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-
+# Ignore the Migration folder
+Migration/
 # JetBrains Rider
 *.sln.iml
 
