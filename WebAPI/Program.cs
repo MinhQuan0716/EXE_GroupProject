@@ -62,7 +62,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAllOrigins");
+app.UseCors("Access-Control-Allow-Origin");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
@@ -70,11 +70,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API");
-
-        // Add dropdown menus for enum parameters
-        c.DefaultModelRendering(ModelRendering.Example);
-        c.DisplayRequestDuration();
-        c.DocExpansion(DocExpansion.None);
+       
     });
 
 }
@@ -84,11 +80,6 @@ if (app.Environment.IsProduction())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API");
-
-        // Add dropdown menus for enum parameters
-        c.DefaultModelRendering(ModelRendering.Example);
-        c.DisplayRequestDuration();
-        c.DocExpansion(DocExpansion.None);
 
     });
 }
