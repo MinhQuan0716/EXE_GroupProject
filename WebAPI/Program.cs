@@ -1,6 +1,7 @@
 using Application.Common;
 using Application.SchemaFilter;
 using Infrastructure;
+using Infrastructure.Mappers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Text.Json.Serialization;
@@ -18,16 +19,9 @@ builder.Services.AddSwaggerGen();
 var configuration = builder.Configuration.Get<AppConfiguration>();
 builder.Services.AddInfrastructuresService(configuration!.DatabaseConnection);
 builder.Services.AddWebAPI(builder.Configuration.GetSection("AppSetting:Token").Value!);
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAllOrigins",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
-});
+builder.Services.AddCors(options
+     => options.AddDefaultPolicy(policy
+         => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
@@ -55,10 +49,10 @@ builder.Services.AddSwaggerGen(opt =>
             }
      });
     opt.SchemaFilter<RegisterSchemaFilter>();
-    
+
 });
 builder.Services.AddSingleton(configuration);
-
+builder.Services.AddAutoMapper(typeof(MapperConfiugration));
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -95,7 +89,7 @@ if (app.Environment.IsProduction())
         c.DefaultModelRendering(ModelRendering.Example);
         c.DisplayRequestDuration();
         c.DocExpansion(DocExpansion.None);
-        
+
     });
 }
 
