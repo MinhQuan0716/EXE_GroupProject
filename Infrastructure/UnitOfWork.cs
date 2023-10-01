@@ -16,6 +16,7 @@ namespace Infrastructure
         private readonly ICareerQuizRepository _careerQuizRepository;
         private readonly IQuizOptionRepository _quizOptionRepository;
         private readonly IQuizTypeRepository _quizTypeRepository;
+    
         public UnitOfWork(AppDbContext appDbContext, IUserRepository userRepository,
             ICareerQuizRepository careerQuizRepository, IQuizOptionRepository quizOptionRepository, IQuizTypeRepository quizTypeRepository)
         {
@@ -24,6 +25,7 @@ namespace Infrastructure
             _careerQuizRepository = careerQuizRepository;
             _quizOptionRepository = quizOptionRepository;
             _quizTypeRepository = quizTypeRepository;
+
         }
         public IUserRepository UserRepository => _userRepository;
 
@@ -32,6 +34,8 @@ namespace Infrastructure
         public IQuizOptionRepository QuizOptionRepository => _quizOptionRepository;
 
         public IQuizTypeRepository QuizTypeRepository => _quizTypeRepository;
+
+
 
         public async Task<int> SaveChangeAsync()
         {

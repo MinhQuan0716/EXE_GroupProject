@@ -1,4 +1,4 @@
-﻿using Application.ViewModel;
+﻿using Application.ViewModel.QuizModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +10,6 @@ namespace Application.InterfaceService
     public  interface ICareerQuizService
     {
         Task<bool> CreateQuiz(CreateCareerQuizModel createCareerQuizModel);
+        Task<List<ViewCareerQuizModel >> GetAllQuiz();  
     }
 }

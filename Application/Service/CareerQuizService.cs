@@ -1,5 +1,5 @@
 ﻿using Application.InterfaceService;
-using Application.ViewModel;
+using Application.ViewModel.QuizModel;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,9 @@ namespace Application.Service
             int typeId = await _unitOfWork.QuizTypeRepository.GetTypeIdByName(createCareerQuizModel.QuizType.ToString());
             var question = new CareerQuiz
             {
-                QuizText = createCareerQuizModel.QuizText,
-                TypeId = typeId
+                QuizText=createCareerQuizModel.QuizText,
+                TypeId=typeId,
+                IsDelete=false,
             };
             await _unitOfWork.CareerQuizRepository.AddAsync(question);
             await _unitOfWork.SaveChangeAsync();
@@ -59,8 +60,35 @@ namespace Application.Service
             options.Add(quizOption3);
             options.Add(quizOption4);
             options.Add(quizOption5);
-            _unitOfWork.QuizOptionRepository.AddRangeAsync(options);
+            await  _unitOfWork.QuizOptionRepository.AddRangeAsync(options);
             return await _unitOfWork.SaveChangeAsync() > 0;
         }
+
+        public async Task<List<ViewCareerQuizModel>> GetAllQuiz()
+        {
+            return await _unitOfWork.CareerQuizRepository.GetAllQuiz();
+        }
+
+        /*public async Task<QuizOption> GetQuizOptionForUserResponse(Guid userResponseId)
+        {
+            var userResponse = await _unitOfWork.UserResponseRepository.GetUserResponseById(userResponseId);
+
+            if (userResponse != null)
+            {
+                var selectedOptionId = userResponse.SelectedOptionId;
+
+                if (selectedOptionId.HasValue)
+                {
+                    var quizOption = await _unitOfWork.QuizOptionRepository.GetOptionById(selectedOptionId.Value);
+
+                    if (quizOption != null)
+                    {
+                        return quizOption;
+                    }
+                }
+            }
+
+            return null; 
+        }*/
     }
 }

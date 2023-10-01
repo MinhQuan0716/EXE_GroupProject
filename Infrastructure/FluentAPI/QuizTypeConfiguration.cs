@@ -1,4 +1,5 @@
 ﻿using Domain.Entities;
+using Domain.Enum;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
@@ -16,17 +17,17 @@ namespace Infrastructure.FluentAPI
             builder.HasData(new QuizType
             {
                TypeId=1,
-               TypeName= "Realistic",
+               TypeName= nameof(QuizTypeEnum.Realistic),
             },
              new QuizType
              {
                  TypeId = 2,
-                 TypeName = "Artistic",
+                 TypeName = nameof(QuizTypeEnum.Artistic),
              },
              new QuizType
              {
                  TypeId = 3,
-                 TypeName = "Conventional",
+                 TypeName = nameof(QuizTypeEnum.Conventional),
              }
              );
         }

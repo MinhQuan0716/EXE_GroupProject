@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.InterfaceService
+namespace Application.ViewModel
 {
-    public interface IClaimService
+    public class LoginWithEmailViewModel
     {
-        public Guid GetCurrentUserId { get; }
+        public string Email { get; set; } = null!;
     }
 }

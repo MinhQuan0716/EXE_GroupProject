@@ -8,9 +8,9 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Application.ViewModel
+namespace Application.ViewModel.QuizModel
 {
-    public  class CreateCareerQuizModel
+    public class CreateCareerQuizModel
     {
         public string QuizText { get; set; }
         [JsonConverter(typeof(JsonStringEnumConverter))]

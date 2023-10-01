@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Application.InterfaceRepository
 {
-    public  interface IQuizOptionRepository:IGenericRepository<QuizOption>
+    public interface IQuizOptionRepository:IGenericRepository<QuizOption>
     {
 
     }
