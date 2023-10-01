@@ -88,7 +88,6 @@ namespace Infrastructure.Repository
             }
             _dbSet.UpdateRange(entities);
         }
-
         public void Update(TEntity entity)
         {
             entity.ModificationDate = _timeService.GetCurrentTime();

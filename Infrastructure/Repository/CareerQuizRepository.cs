@@ -25,8 +25,9 @@ namespace Infrastructure.Repository
 
         public async Task<List<ViewCareerQuizModel>> GetAllQuiz()
         {
-            List<ViewCareerQuizModel> quizList = await _appDbContext.CareerQuizzes.Include(x => x.QuizOptions)
-                .Where(x => x.IsDelete == false)
+          List<ViewCareerQuizModel> quizList = await _appDbContext.CareerQuizzes.Include(x=>x.QuizOptions)
+                .Where(x=>x.IsDelete==false)
+                .OrderBy(x=>x.CreationDate)
                 .Select(
                   x => new ViewCareerQuizModel
                   {
@@ -41,16 +42,16 @@ namespace Infrastructure.Repository
             return await _appDbContext.CareerQuizzes.OrderByDescending(x => x.CreationDate).FirstAsync();
         }
 
-        public async Task<List<ViewCareerQuizModel>> GetQuizOption()
+        public async Task<Guid> GetQuizIdFromQuizText(string text)
         {
-            List<ViewCareerQuizModel> quizList = await _appDbContext.CareerQuizzes.Include(x => x.QuizOptions)
-                .Where(x => x.IsDelete == false)
-                .Select(
-                  x => new ViewCareerQuizModel
-                  {
-                      Option = x.QuizOptions.OrderBy(x => x.InterestLevel).Select(x => x.InterestLevel).ToList(),
-                  }).ToListAsync();
-            return quizList;
+            CareerQuiz careerQuiz = await _appDbContext.CareerQuizzes.Where(x=>x.QuizText.Equals(text)).SingleAsync();
+            return careerQuiz.Id;
+        }
+
+        public async Task RemoveQuiz(Guid id)
+        {
+         var careerQuiz=   await _appDbContext.CareerQuizzes.FindAsync(id);
+             _appDbContext.Remove(careerQuiz);
         }
     }
 }

@@ -8,6 +8,7 @@ using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -68,8 +69,9 @@ namespace Application.Service
                 UserName = registerModel.UserName,
                 Email = registerModel.Email,
                 Password = registerModel.Password.Hash(),
-                BirthDay =DateTime.Parse(registerModel.BirthDay),
-                RoleId=2
+                BirthDay = DateTime.ParseExact(registerModel.BirthDay, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                RoleId =2,
+                IsDelete= false,
             };
             await _unitOfWork.UserRepository.AddAsync(newUser); 
             return await _unitOfWork.SaveChangeAsync()>0;

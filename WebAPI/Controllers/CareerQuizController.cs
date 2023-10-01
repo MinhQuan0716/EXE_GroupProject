@@ -33,5 +33,15 @@ namespace WebAPI.Controllers
             }
             return BadRequest();
         }
+        [HttpDelete]
+        public async Task<IActionResult> DeleteQuiz(Guid id)
+        { 
+           bool isDeleted= await _careerQuizService.DeleteQuiz(id);
+            if (isDeleted)
+            {
+                return NoContent();
+            }
+            return BadRequest();
+        }
     }
 }

@@ -395,7 +395,10 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-
+# Ignore Entity Framework migration files
+**/Migrations/*.cs
+**/Migrations/*.Designer.cs
+**/Migrations/*.resx
 # JetBrains Rider
 *.sln.iml
 

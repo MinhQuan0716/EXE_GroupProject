@@ -13,6 +13,9 @@ namespace Application
         public ICareerQuizRepository CareerQuizRepository { get; }
         public IQuizOptionRepository QuizOptionRepository { get; }
         public IQuizTypeRepository QuizTypeRepository { get; }
+        public IUserResponseRepository UserResponse { get; }
+        public ISuggestionRepository SuggestionRepository { get; }
+        public IMajorRepository MajorRepository { get; }
         public Task<int> SaveChangeAsync();
     }
 }

@@ -26,10 +26,10 @@ namespace Application.Service
                 TypeId=typeId,
                 IsDelete=false,
             };
-            await _unitOfWork.CareerQuizRepository.AddAsync(question);
-            await _unitOfWork.SaveChangeAsync();
-            await _unitOfWork.CareerQuizRepository.GetlastSavedQuiz();
-            List<QuizOption> options = new List<QuizOption>();
+         await _unitOfWork.CareerQuizRepository.AddAsync(question);
+         await _unitOfWork.SaveChangeAsync();
+          await  _unitOfWork.CareerQuizRepository.GetlastSavedQuiz();
+            List<QuizOption >options= new List<QuizOption>();
             QuizOption quizOption1 = new QuizOption
             {
                 InterestLevel = 1,
@@ -50,45 +50,30 @@ namespace Application.Service
                 InterestLevel = 4,
                 CareerQuizId = question.Id,
             };
-            QuizOption quizOption5 = new QuizOption
-            {
-                InterestLevel = 5,
-                CareerQuizId = question.Id,
-            };
             options.Add(quizOption1);
             options.Add(quizOption2);
             options.Add(quizOption3);
             options.Add(quizOption4);
-            options.Add(quizOption5);
-            await  _unitOfWork.QuizOptionRepository.AddRangeAsync(options);
+          await  _unitOfWork.QuizOptionRepository.AddRangeAsync(options);
             return await _unitOfWork.SaveChangeAsync() > 0;
+        }
+
+        public async Task<bool> DeleteQuiz(Guid quizId)
+        {
+            await _unitOfWork.CareerQuizRepository.RemoveQuiz(quizId);
+            await _unitOfWork.QuizOptionRepository.RemoveRangeOption(quizId);
+            List<QuizOption> options = await _unitOfWork.QuizOptionRepository.GetOptionsByQuizId(quizId);
+            foreach(var option in options)
+            {
+                await _unitOfWork.UserResponse.DeleteResponse(option.Id);
+            }
+            return await _unitOfWork.SaveChangeAsync()>0;
         }
 
         public async Task<List<ViewCareerQuizModel>> GetAllQuiz()
         {
             return await _unitOfWork.CareerQuizRepository.GetAllQuiz();
         }
-
-        /*public async Task<QuizOption> GetQuizOptionForUserResponse(Guid userResponseId)
-        {
-            var userResponse = await _unitOfWork.UserResponseRepository.GetUserResponseById(userResponseId);
-
-            if (userResponse != null)
-            {
-                var selectedOptionId = userResponse.SelectedOptionId;
-
-                if (selectedOptionId.HasValue)
-                {
-                    var quizOption = await _unitOfWork.QuizOptionRepository.GetOptionById(selectedOptionId.Value);
-
-                    if (quizOption != null)
-                    {
-                        return quizOption;
-                    }
-                }
-            }
-
-            return null; 
-        }*/
+       
     }
 }

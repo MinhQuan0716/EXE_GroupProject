@@ -26,6 +26,9 @@ namespace Infrastructure
             services.AddScoped<ICareerQuizRepository, CareerQuizRepository>();
             services.AddScoped<IQuizOptionRepository, QuizOptionRepository>();
             services.AddScoped<IQuizTypeRepository, QuizTypeRepository>();  
+            services.AddScoped<IUserResponseRepository , UserResponseRepository>();
+            services.AddScoped<ISuggestionRepository, SuggestionRepository>();
+            services.AddScoped<IMajorRepository, MajorRepository>();
             services.AddTransient<IUserService, UserService>();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddDbContext<AppDbContext>(options =>

@@ -1,6 +1,7 @@
 using Application.Common;
 using Application.SchemaFilter;
 using Infrastructure;
+using Infrastructure.Mappers;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using Microsoft.AspNetCore.Authentication;
@@ -64,11 +65,9 @@ builder.Services.AddSwaggerGen(opt =>
             }
      });
     opt.SchemaFilter<RegisterSchemaFilter>();
-    
+
 });
 builder.Services.AddSingleton(configuration);
-
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddAuthentication().AddGoogle(googleOptions =>
 {
@@ -76,6 +75,7 @@ builder.Services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
 });
 
+builder.Services.AddAutoMapper(typeof(MapperConfiugration));
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -100,7 +100,7 @@ builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, Applic
 
 
 app.UseHttpsRedirection();
-app.UseCors();
+app.UseCors("AllowAllOrigins");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
@@ -108,11 +108,7 @@ if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API");
-
-        // Add dropdown menus for enum parameters
-        c.DefaultModelRendering(ModelRendering.Example);
-        c.DisplayRequestDuration();
-        c.DocExpansion(DocExpansion.None);
+       
     });
 
 }
@@ -123,14 +119,8 @@ if (app.Environment.IsProduction())
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Backend API");
 
-        // Add dropdown menus for enum parameters
-        c.DefaultModelRendering(ModelRendering.Example);
-        c.DisplayRequestDuration();
-        c.DocExpansion(DocExpansion.None);
-        
     });
 }
-
 
 app.UseAuthorization();
 

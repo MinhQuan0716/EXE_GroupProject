@@ -11,6 +11,8 @@ namespace Application.InterfaceRepository
     public  interface ICareerQuizRepository:IGenericRepository<CareerQuiz>
     {
         Task<CareerQuiz> GetlastSavedQuiz();
-        Task<List<ViewCareerQuizModel>> GetAllQuiz();    
+        Task<List<ViewCareerQuizModel>> GetAllQuiz();
+        Task RemoveQuiz(Guid id);
+        Task<Guid> GetQuizIdFromQuizText(string text);
     }
 }
