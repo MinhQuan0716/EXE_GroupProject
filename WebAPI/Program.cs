@@ -62,8 +62,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAllOrigins");
-app.UseCors("Access-Control-Allow-Origin");
 app.UseCors(builder => builder
     .AllowAnyOrigin()
     .AllowAnyMethod()
