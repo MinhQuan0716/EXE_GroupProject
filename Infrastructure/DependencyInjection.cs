@@ -29,7 +29,6 @@ namespace Infrastructure
             services.AddScoped<IUserResponseRepository , UserResponseRepository>();
             services.AddScoped<ISuggestionRepository, SuggestionRepository>();
             services.AddScoped<IMajorRepository, MajorRepository>();
-            services.AddTransient<IUserService, UserService>();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddDbContext<AppDbContext>(options =>
             {

@@ -1,5 +1,4 @@
 ﻿using Application.ViewModel;
-using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +11,5 @@ namespace Application.InterfaceService
     {
         public Task<bool> RegisterAsync(RegisterModel registerModel);
         public Task<Token> LoginAsync(LoginModel loginModel);
-        public Task<Token> LoginWithEmail(LoginWithEmailViewModel loginDto);
-        public Task<List<UserViewModel>> GetAllAsync();
-        public Task AddUserAsync(User user);
     }
 }
