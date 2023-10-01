@@ -101,6 +101,7 @@ builder.Services.AddIdentityServer().AddApiAuthorization<ApplicationUser, Applic
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAllOrigins");
+app.UseCors("Access-Control-Allow-Origin");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment() || app.Environment.IsStaging())
 {
