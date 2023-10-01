@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
 {
-    public class CareerQuizRepository : GenericRepository<CareerQuiz>,ICareerQuizRepository
+    public class CareerQuizRepository : GenericRepository<CareerQuiz>, ICareerQuizRepository
     {
         private readonly AppDbContext _appDbContext;
         private readonly ICurrentTime _currentTime;
         private IClaimService _claimService;
         public CareerQuizRepository(AppDbContext dbContext, ICurrentTime timeService, IClaimService claimsService) : base(dbContext, timeService, claimsService)
         {
-            _appDbContext= dbContext;
-            _currentTime= timeService;
-            _claimService= claimsService;
+            _appDbContext = dbContext;
+            _currentTime = timeService;
+            _claimService = claimsService;
         }
 
         public async Task<List<ViewCareerQuizModel>> GetAllQuiz()
@@ -30,10 +30,10 @@ namespace Infrastructure.Repository
                 .OrderBy(x=>x.CreationDate)
                 .Select(
                   x => new ViewCareerQuizModel
-               {
-                   Question=x.QuizText,
-                   Option= x.QuizOptions.OrderBy(x=>x.InterestLevel).Select(x=>x.InterestLevel).ToList(),
-               }).ToListAsync();
+                  {
+                      Question = x.QuizText,
+                      Option = x.QuizOptions.OrderBy(x => x.InterestLevel).Select(x => x.InterestLevel).ToList(),
+                  }).ToListAsync();
             return quizList;
         }
 

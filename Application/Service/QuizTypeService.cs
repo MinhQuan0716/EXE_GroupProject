@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.InterfaceService
+namespace Application.Service
 {
-    public interface IClaimService
+    public class QuizTypeService
     {
-        public Guid GetCurrentUserId { get; }
+       
     }
 }
