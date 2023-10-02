@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-  
+    [EnableCors]
     public class UserController : MainController
     {
         private readonly IUserService _userService;
