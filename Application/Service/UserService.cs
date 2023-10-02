@@ -26,6 +26,8 @@ namespace Application.Service
             _currentTime = currentTime;
         }
 
+       
+
         public async Task<Token> LoginAsync(LoginModel loginModel)
         {
             var user = await _unitOfWork.UserRepository.FindUserByEmail(loginModel.Email);

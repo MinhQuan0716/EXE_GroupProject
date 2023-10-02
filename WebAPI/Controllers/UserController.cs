@@ -1,12 +1,13 @@
 ﻿using Application.InterfaceService;
 using Application.ViewModel;
+using Domain.Entities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [EnableCors]
+    [EnableCors("AllowOrigin")]
     public class UserController : MainController
     {
         private readonly IUserService _userService;

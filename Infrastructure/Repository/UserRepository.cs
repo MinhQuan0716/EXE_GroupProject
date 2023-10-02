@@ -32,5 +32,9 @@ namespace Infrastructure.Repository
         {
             return await _dbContext.Users.FirstAsync(x => x.Email.Equals(email));
         }
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _dbContext.Users.ToListAsync();
+        }
     }
 }

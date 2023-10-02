@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [EnableCors]
+    [EnableCors("AllowOrigin")]
     public class CareerQuizController : MainController
     {
         private readonly ICareerQuizService _careerQuizService;
