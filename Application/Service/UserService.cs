@@ -25,9 +25,6 @@ namespace Application.Service
             _configuration=configuration;
             _currentTime = currentTime;
         }
-
-       
-
         public async Task<Token> LoginAsync(LoginModel loginModel)
         {
             var user = await _unitOfWork.UserRepository.FindUserByEmail(loginModel.Email);
@@ -63,12 +60,17 @@ namespace Application.Service
             {
                 throw new Exception("Mail already existed");
             }
+            DateTime birthDay;
+            if (!DateTime.TryParseExact(registerModel.Birthday, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDay))
+            {
+                throw new Exception("Invalid Birthday format. Please use 'dd/MM/yyyy' format.");
+            }
             var newUser = new User
             {
                 UserName = registerModel.UserName,
                 Email = registerModel.Email,
                 Password = registerModel.Password.Hash(),
-                BirthDay = DateTime.ParseExact(registerModel.BirthDay, "dd/MM/yyyy", CultureInfo.InvariantCulture),
+                BirthDay = birthDay,
                 RoleId =2,
                 IsDelete= false,
             };
