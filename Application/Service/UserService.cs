@@ -52,7 +52,28 @@ namespace Application.Service
             };
 
         }
+        public async Task<Token> LoginWithEmail(LoginWithEmailViewModel loginDto)
+        {
+            var user = await _unitOfWork.UserRepository.FindUserByEmail(loginDto.Email);
+            if (user != null)
+            {
+                var refreshToken = RefreshTokenString.GetRefreshToken();
+                var accessToken = user.GenerateJsonWebToken(_configuration.JWTSecretKey, _currentTime.GetCurrentTime());
+                var expireRefreshTokenTime = DateTime.Now.AddHours(24);
 
+                user.RefreshToken = refreshToken;
+                user.ExpireTokenTime = expireRefreshTokenTime;
+                _unitOfWork.UserRepository.Update(user);
+                await _unitOfWork.SaveChangeAsync();
+                return new Token
+                {
+                    Username = user.UserName,
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken
+                };
+            }
+            return null;
+        }
         public async Task<bool> RegisterAsync(RegisterModel registerModel)
         {
             bool isEmailExisted =await  _unitOfWork.UserRepository.CheckMailExisted(registerModel.Email);
