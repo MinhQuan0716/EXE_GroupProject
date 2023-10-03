@@ -21,7 +21,7 @@ namespace Application.SchemaFilter
                     ["Username"] = new OpenApiString("string"),
                     ["Email"] = new OpenApiString("string"),
                     ["Password"] = new OpenApiString("string"),
-                    ["Birthday"] = new OpenApiString(DateTime.UtcNow.ToString("yyyy/MM/dd"))
+                    ["Birthday"] = new OpenApiString(DateTime.UtcNow.ToString("yyyy-MM-dd"))
                 };
             }
               
