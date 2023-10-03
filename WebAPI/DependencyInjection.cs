@@ -7,6 +7,8 @@ using System.Text;
 using System.Text.Json.Serialization;
 using WebAPI.WebService;
 using Application.ViewModel;
+using Application.Uitls;
+
 namespace WebAPI
 {
     public static class DependencyInjection
@@ -17,6 +19,7 @@ namespace WebAPI
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICareerQuizService, CareerQuizService>();
             services.AddScoped<IUserResopnseService,UserResponseService>();
+            services.AddScoped<IExternalAuthUtils,ExternalAuthUtils>(); 
             services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>
