@@ -61,9 +61,9 @@ namespace Application.Service
                 throw new Exception("Mail already existed");
             }
             DateTime birthDay;
-            if (!DateTime.TryParseExact(registerModel.BirthDay, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDay))
+            if (!DateTime.TryParseExact(registerModel.BirthDay, "yyyy/MM/dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDay))
             {
-                throw new Exception("Invalid Birthday format. Please use 'dd/MM/yyyy' format.");
+                throw new Exception("Invalid Birthday format. Please use 'yyyy/MM/dd' format.");
             }
             var newUser = new User
             {
