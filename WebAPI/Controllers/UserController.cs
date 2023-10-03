@@ -1,5 +1,8 @@
-﻿using Application.InterfaceService;
+﻿using Application;
+using Application.InterfaceService;
+using Application.Uitls;
 using Application.ViewModel;
+using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
@@ -11,9 +14,15 @@ namespace WebAPI.Controllers
     public class UserController : MainController
     {
         private readonly IUserService _userService;
-        public UserController(IUserService userService)
+        private readonly JwtHandler _jwtHandler;
+        private readonly IExternalAuthUtils _externalAuthUtils;
+        private readonly IMapper _mapper;
+
+        public UserController(IUserService userService, IExternalAuthUtils externalAuthUtils, IMapper mapper)
         {
             _userService = userService;
+            _externalAuthUtils = externalAuthUtils;
+            _mapper = mapper;
         }
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel registerModel)

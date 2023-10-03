@@ -3,6 +3,7 @@ using Application.InterfaceRepository;
 using Application.InterfaceService;
 using Application.Uitls;
 using Application.ViewModel;
+using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -19,11 +20,13 @@ namespace Application.Service
         private readonly IUnitOfWork _unitOfWork;
         private readonly AppConfiguration _configuration;
         private readonly ICurrentTime _currentTime;
-        public UserService(IUnitOfWork unitOfWork, AppConfiguration configuration, ICurrentTime currentTime)
+        private readonly IMapper _mapper;
+        public UserService(IUnitOfWork unitOfWork, AppConfiguration configuration, ICurrentTime currentTime,IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _configuration=configuration;
             _currentTime = currentTime;
+            _mapper=mapper;
         }
         public async Task<Token> LoginAsync(LoginModel loginModel)
         {
@@ -97,6 +100,17 @@ namespace Application.Service
             };
             await _unitOfWork.UserRepository.AddAsync(newUser); 
             return await _unitOfWork.SaveChangeAsync()>0;
+        }
+        public async Task<List<UserViewModel>> GetAllAsync()
+        {
+            var users = await _unitOfWork.UserRepository.GetAllAsync();
+            var result = _mapper.Map<List<UserViewModel>>(users);
+            return result;
+        }
+        public async Task AddUserAsync(User user)
+        {
+            await _unitOfWork.UserRepository.AddAsync(user);
+            await _unitOfWork.SaveChangeAsync();
         }
     }
 }
