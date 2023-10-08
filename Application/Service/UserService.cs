@@ -51,7 +51,8 @@ namespace Application.Service
             {
                 Username = user.UserName,
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                RoleName=user.Role.RoleName
             };
 
         }
@@ -72,7 +73,8 @@ namespace Application.Service
                 {
                     Username = user.UserName,
                     AccessToken = accessToken,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    RoleName=user.Role.RoleName
                 };
             }
             return null;
