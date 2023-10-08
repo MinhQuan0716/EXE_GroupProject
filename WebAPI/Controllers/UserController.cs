@@ -46,9 +46,11 @@ namespace WebAPI.Controllers
             {
                 Email = payload.Email,
                 UserName = payload.Email,
+                RoleId=2,
+                IsDelete= false,
             };
 
-            var user = _userService.GetAllAsync().Result.SingleOrDefault(u => u.Email == newUser.Email);
+            var user = _userService.GetAllAsync().Result.SingleOrDefault(u => u.Email.Equals(newUser.Email));
             if (user == null)
             {
                 await _userService.AddUserAsync(newUser);
