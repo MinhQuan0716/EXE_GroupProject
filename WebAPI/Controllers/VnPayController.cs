@@ -1,5 +1,5 @@
 ﻿using Application.InterfaceService;
-using Application.ViewModel;
+using Application.ViewModel.PaymentModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers

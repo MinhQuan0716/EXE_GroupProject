@@ -4,7 +4,7 @@ using System.Linq;
 using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
-using Application.ViewModel;
+using Application.ViewModel.UserModel;
 using AutoMapper;
 using Domain.Entities;
 

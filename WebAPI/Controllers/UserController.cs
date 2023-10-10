@@ -1,7 +1,7 @@
 ﻿using Application;
 using Application.InterfaceService;
 using Application.Uitls;
-using Application.ViewModel;
+using Application.ViewModel.UserModel;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -133,10 +133,11 @@ namespace WebAPI.Controllers
             }
             return BadRequest();
         }
+        [Authorize(Roles="Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAllUser()
         {
-            List<User> users = await _userService.GetAllUsersAsync();
+            List<UserInformationViewModel> users = await _userService.GetAllUserAsync();
             if(users.Count == 0)
             {
                 return NoContent();

@@ -2,7 +2,7 @@
 using Application.InterfaceRepository;
 using Application.InterfaceService;
 using Application.Uitls;
-using Application.ViewModel;
+using Application.ViewModel.UserModel;
 using AutoMapper;
 using Domain.Entities;
 using Microsoft.Extensions.Caching.Memory;
@@ -127,15 +127,14 @@ namespace Application.Service
             if(user== null)
             {
                 throw new Exception("User not existed");
+            } else if (user.Role.RoleName.Equals("Admin"))
+            {
+                throw new Exception("Cannot ban this user");
             }
             _unitOfWork.UserRepository.SoftRemove(user);
             return await _unitOfWork.SaveChangeAsync() > 0; ;
         }
 
-        public async Task<List<User>> GetAllUsersAsync()
-        {
-            return await _unitOfWork.UserRepository.GetAllUsers();
-        }
         public async Task<bool> ResetPassword(ResetPasswordDTO resetPasswordDTO)
         {
             string email;
@@ -202,6 +201,11 @@ namespace Application.Service
             {
                 throw new Exception("User not available");
             }
+        }
+
+        public  async Task<List<UserInformationViewModel>> GetAllUserAsync()
+        {
+            return await _unitOfWork.UserRepository.GetAllUsers();
         }
     }
 }

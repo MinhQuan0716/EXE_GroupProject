@@ -1,4 +1,4 @@
-﻿using Application.ViewModel;
+﻿using Application.ViewModel.PaymentModel;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
