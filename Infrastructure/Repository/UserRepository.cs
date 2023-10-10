@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repository
 {
-    public class UserRepository : GenericRepository<User>,IUserRepository
+    public class UserRepository : GenericRepository<User>, IUserRepository
     {
         private readonly AppDbContext _dbContext;
         private readonly IClaimService _claimService;
@@ -22,7 +22,6 @@ namespace Infrastructure.Repository
             _claimService = claimsService;
             _currentTime = timeService;
         }
-
         public async Task<bool> CheckMailExisted(string email)
         {
             return await _dbContext.Users.AnyAsync(x=>x.Email.Equals(email)); 

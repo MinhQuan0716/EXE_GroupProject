@@ -114,5 +114,21 @@ namespace Application.Service
             await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.SaveChangeAsync();
         }
+
+        public async Task<bool> BanUser(Guid userId)
+        {
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(userId);
+            if(user== null)
+            {
+                throw new Exception("User not existed");
+            }
+            _unitOfWork.UserRepository.SoftRemove(user);
+            return await _unitOfWork.SaveChangeAsync() > 0; ;
+        }
+
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await _unitOfWork.UserRepository.GetAllUsers();
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Application.InterfaceRepository
       
         public Task<bool> CheckMailExisted(string email);
         public Task<User>FindUserByEmail(string email);
+        public Task<List<User>> GetAllUsers();
     }
 }

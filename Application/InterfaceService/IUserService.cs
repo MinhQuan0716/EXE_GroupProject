@@ -15,6 +15,8 @@ namespace Application.InterfaceService
         public Task<Token> LoginWithEmail(LoginWithEmailViewModel loginDto);
         public Task<List<UserViewModel>> GetAllAsync();
         public Task AddUserAsync(User user);
+        public Task<bool> BanUser(Guid userId);
+        public Task<List<User>> GetAllUsersAsync();
 
     }
 }

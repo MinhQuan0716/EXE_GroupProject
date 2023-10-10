@@ -4,6 +4,7 @@ using Application.Uitls;
 using Application.ViewModel;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,27 @@ namespace WebAPI.Controllers
         public async Task<Token> Login(LoginModel loginModel)
         {
             return await _userService.LoginAsync(loginModel);
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> BanUser(Guid userId)
+        {
+            bool isBanned= await _userService.BanUser(userId);
+            if(isBanned)
+            {
+                return NoContent();
+            }
+            return BadRequest();
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetAllUser()
+        {
+            List<User> users = await _userService.GetAllUsersAsync();
+            if(users.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(users);
         }
     }
 }
