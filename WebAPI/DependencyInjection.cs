@@ -8,6 +8,7 @@ using System.Text.Json.Serialization;
 using WebAPI.WebService;
 using Application.ViewModel;
 using Application.Uitls;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace WebAPI
 {
@@ -18,8 +19,11 @@ namespace WebAPI
             services.AddScoped<IClaimService, ClaimService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ICareerQuizService, CareerQuizService>();
-            services.AddScoped<IUserResopnseService,UserResponseService>();
-            services.AddScoped<IExternalAuthUtils,ExternalAuthUtils>(); 
+            services.AddScoped<IVnPayService, VnPayService>();
+            services.AddScoped<IExternalAuthUtils, ExternalAuthUtils>();
+            services.AddScoped<IUserResopnseService, UserResponseService>();
+
+            services.AddMemoryCache();
             services.AddHttpContextAccessor();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                .AddJwtBearer(options =>
