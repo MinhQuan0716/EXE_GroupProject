@@ -1,11 +1,12 @@
 ﻿using Application.InterfaceService;
 using Application.ViewModel.QuizModel;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-
+    [EnableCors("AllowOrigin")]
     public class CareerQuizController : MainController
     {
         private readonly ICareerQuizService _careerQuizService;

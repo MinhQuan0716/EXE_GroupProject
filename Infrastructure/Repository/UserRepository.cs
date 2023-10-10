@@ -30,7 +30,11 @@ namespace Infrastructure.Repository
 
         public async Task<User> FindUserByEmail(string email)
         {
-            return await _dbContext.Users.FirstAsync(x => x.Email.Equals(email));
+            return await _dbContext.Users.Include(x=>x.Role).FirstAsync(x => x.Email.Equals(email));
+        }
+        public async Task<List<User>> GetAllUsers()
+        {
+            return await _dbContext.Users.ToListAsync();
         }
 
         public async Task<User> GetUserByEmailAsync(string email)

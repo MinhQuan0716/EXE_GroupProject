@@ -2,12 +2,13 @@
 using Application.ViewModel.QuizModel;
 using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-   
+    [EnableCors("AllowOrigin")]
     public class UserResopnseController : MainController
     {
        private IUserResopnseService _userResopnseService;

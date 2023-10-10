@@ -28,13 +28,12 @@ namespace Application.Service
         public UserService(IUnitOfWork unitOfWork, AppConfiguration configuration, ICurrentTime currentTime, IMapper mapper, IMemoryCache memoryCache, ISendMailHelper sendMailHelper)
         {
             _unitOfWork = unitOfWork;
-            _configuration = configuration;
+            _configuration=configuration;
             _currentTime = currentTime;
             _mapper = mapper;
             _memoryCache = memoryCache;
             _sendMailHelper = sendMailHelper;
         }
-
         public async Task<Token> LoginAsync(LoginModel loginModel)
         {
             var user = await _unitOfWork.UserRepository.FindUserByEmail(loginModel.Email);
@@ -58,31 +57,11 @@ namespace Application.Service
             {
                 Username = user.UserName,
                 AccessToken = accessToken,
-                RefreshToken = refreshToken
+                RefreshToken = refreshToken,
+                RoleName=user.Role.RoleName
             };
 
         }
-
-        public async Task<bool> RegisterAsync(RegisterModel registerModel)
-        {
-            bool isEmailExisted =await  _unitOfWork.UserRepository.CheckMailExisted(registerModel.Email);
-            if(isEmailExisted)
-            {
-                throw new Exception("Mail already existed");
-            }
-            var newUser = new User
-            {
-                UserName = registerModel.UserName,
-                Email = registerModel.Email,
-                Password = registerModel.Password.Hash(),
-                BirthDay = DateTime.ParseExact(registerModel.BirthDay, "dd/MM/yyyy", CultureInfo.InvariantCulture),
-                RoleId =2,
-                IsDelete= false,
-            };
-            await _unitOfWork.UserRepository.AddAsync(newUser); 
-            return await _unitOfWork.SaveChangeAsync()>0;
-        }
-
         public async Task<Token> LoginWithEmail(LoginWithEmailViewModel loginDto)
         {
             var user = await _unitOfWork.UserRepository.FindUserByEmail(loginDto.Email);
@@ -100,19 +79,42 @@ namespace Application.Service
                 {
                     Username = user.UserName,
                     AccessToken = accessToken,
-                    RefreshToken = refreshToken
+                    RefreshToken = refreshToken,
+                    RoleName=user.Role.RoleName
                 };
             }
             return null;
         }
-
+        public async Task<bool> RegisterAsync(RegisterModel registerModel)
+        {
+            bool isEmailExisted =await  _unitOfWork.UserRepository.CheckMailExisted(registerModel.Email);
+            if(isEmailExisted)
+            {
+                throw new Exception("Mail already existed");
+            }
+            DateTime birthDay;
+            if (!DateTime.TryParseExact(registerModel.BirthDay, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out birthDay))
+            {
+                throw new Exception("Invalid Birthday format. Please use 'yyyy-MM-dd' format.");
+            }
+            var newUser = new User
+            {
+                UserName = registerModel.UserName,
+                Email = registerModel.Email,
+                Password = registerModel.Password.Hash(),
+                BirthDay = birthDay,
+                RoleId =2,
+                IsDelete= false,
+            };
+            await _unitOfWork.UserRepository.AddAsync(newUser); 
+            return await _unitOfWork.SaveChangeAsync()>0;
+        }
         public async Task<List<UserViewModel>> GetAllAsync()
         {
             var users = await _unitOfWork.UserRepository.GetAllAsync();
             var result = _mapper.Map<List<UserViewModel>>(users);
             return result;
         }
-
         public async Task AddUserAsync(User user)
         {
             await _unitOfWork.UserRepository.AddAsync(user);

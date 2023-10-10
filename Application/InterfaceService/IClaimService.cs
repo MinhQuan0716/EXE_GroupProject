@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Application.InterfaceService
 {
-    public interface IClaimService
+    public  interface IClaimService
     {
         public Guid GetCurrentUserId { get; }
     }

@@ -17,7 +17,7 @@ namespace Application.Uitls
         public ExternalAuthUtils(IConfiguration configuration)
         {
             _configuration = configuration;
-            _googleClientId = _configuration["Authentication:Google:ClientId"]!;
+            _googleClientId = _configuration["Authentication:Google:clientId"]!;
         }
 
         public async Task<GoogleJsonWebSignature.Payload> VerifyGoogleToken(ExternalAuth externalAuth)

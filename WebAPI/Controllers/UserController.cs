@@ -4,13 +4,14 @@ using Application.Uitls;
 using Application.ViewModel;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Controllers
-{ 
+{
+    [EnableCors("AllowOrigin")]
     public class UserController : MainController
     {
         private readonly IUserService _userService;
@@ -52,11 +53,13 @@ namespace WebAPI.Controllers
             }
             var newUser = new User
             {
-                Email = payload.Email,              
+                Email = payload.Email,
                 UserName = payload.Email,
+                RoleId=2,
+                IsDelete= false,
             };
 
-            var user = _userService.GetAllAsync().Result.SingleOrDefault(u => u.Email == newUser.Email);
+            var user = _userService.GetAllAsync().Result.SingleOrDefault(u => u.Email.Equals(newUser.Email));
             if (user == null)
             {
                 await _userService.AddUserAsync(newUser);
@@ -65,8 +68,9 @@ namespace WebAPI.Controllers
             var token = await _userService.LoginWithEmail(_mapper.Map<LoginWithEmailViewModel>(newUser));
             return Ok(token);
         }
-        /*[HttpPost("ExternalLogin")]
-        public async Task<IActionResult> ExternalLogin([FromBody] ExternalAuth externalAuth)
+
+        /*[HttpPost]
+        public async Task<Token> ExternalLogin(LoginModel loginModel)
         {
             var payload = await _jwtHandler.VerifyGoogleToken(externalAuth);
             if (payload == null)
