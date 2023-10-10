@@ -12,5 +12,6 @@ namespace Domain.Entities
         public string MajorName { get; set;}
         public string MajorDescription { get; set;}
         public ICollection<Suggestion> Suggestions { get; set;}
+        public ICollection<Course> Courses { get; set;}
     }
 }

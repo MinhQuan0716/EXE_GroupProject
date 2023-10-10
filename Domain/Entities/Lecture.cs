@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.ViewModel
+namespace Domain.Entities
 {
-    public class LoginWithEmailViewModel
+    public class Lecture:BaseEntity
     {
-        public string Email { get; set; } = null!;
+
     }
 }

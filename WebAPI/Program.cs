@@ -53,6 +53,11 @@ builder.Services.AddSwaggerGen(opt =>
 });
 builder.Services.AddSingleton(configuration);
 builder.Services.AddAutoMapper(typeof(MapperConfiugration));
+builder.Services.AddControllers()
+        .AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

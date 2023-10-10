@@ -1,12 +1,14 @@
 ﻿using Application;
 using Application.InterfaceService;
 using Application.Uitls;
-using Application.ViewModel;
+using Application.ViewModel.UserModel;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Controllers
 {
@@ -24,6 +26,7 @@ namespace WebAPI.Controllers
             _externalAuthUtils = externalAuthUtils;
             _mapper = mapper;
         }
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel registerModel)
         {
@@ -34,6 +37,13 @@ namespace WebAPI.Controllers
             }
             return Ok();
         }
+
+        [HttpPost]
+        public async Task<Token> Login(LoginModel loginModel)
+        {
+            return await _userService.LoginAsync(loginModel);
+        }
+
         [HttpPost]
         public async Task<IActionResult> LoginWithGoogle(ExternalAuth externalAuthDto)
         {
@@ -59,10 +69,80 @@ namespace WebAPI.Controllers
             var token = await _userService.LoginWithEmail(_mapper.Map<LoginWithEmailViewModel>(newUser));
             return Ok(token);
         }
-        [HttpPost]
-        public async Task<Token> Login(LoginModel loginModel)
+
+        /*[HttpPost]
+        public async Task<Token> ExternalLogin(LoginModel loginModel)
         {
-            return await _userService.LoginAsync(loginModel);
+            var payload = await _jwtHandler.VerifyGoogleToken(externalAuth);
+            if (payload == null)
+                return BadRequest("Invalid External Authentication.");
+            var info = new UserLoginInfo(externalAuth.Provider, payload.Subject, externalAuth.Provider);
+            var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+            if (user == null)
+            {
+                user = await _userManager.FindByEmailAsync(payload.Email);
+                if (user == null)
+                {
+                    user = new User { Email = payload.Email, UserName = payload.Email };
+                    await _userManager.CreateAsync(user);
+                    //prepare and send an email for the email confirmation
+                    await _userManager.AddToRoleAsync(user, "Viewer");
+                    await _userManager.AddLoginAsync(user, info);
+                }
+                else
+                {
+                    await _userManager.AddLoginAsync(user, info);
+                }
+            }
+            if (user == null)
+                return BadRequest("Invalid External Authentication.");
+            //check for the Locked out account
+            var token = await _jwtHandler.GenerateToken(user);
+            return Ok(new AuthResponse { Token = token, IsAuthSuccessful = true });
+        }*/
+
+        [HttpGet]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var result = await _userService.SendResetPassword(email);
+            if (!result.IsNullOrEmpty())
+            {
+                return Ok();
+            }
+            else return BadRequest("Cannot find User");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO resetObj)
+        {
+            var result = await _userService.ResetPassword(resetObj);
+            if (result)
+            {
+                return Ok(result);
+            }
+            else return BadRequest();
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> BanUser(Guid userId)
+        {
+            bool isBanned= await _userService.BanUser(userId);
+            if(isBanned)
+            {
+                return NoContent();
+            }
+            return BadRequest();
+        }
+        [Authorize(Roles="Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUser()
+        {
+            List<UserInformationViewModel> users = await _userService.GetAllUserAsync();
+            if(users.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(users);
         }
     }
 }

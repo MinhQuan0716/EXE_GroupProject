@@ -1,4 +1,4 @@
-﻿using Application.ViewModel;
+﻿using Application.ViewModel.UserModel;
 using Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -15,6 +15,9 @@ namespace Application.InterfaceService
         public Task<Token> LoginWithEmail(LoginWithEmailViewModel loginDto);
         public Task<List<UserViewModel>> GetAllAsync();
         public Task AddUserAsync(User user);
-
+        public Task<bool> BanUser(Guid userId);
+        public Task<bool> ResetPassword(ResetPasswordDTO resetPasswordDTO);
+        public Task<string> SendResetPassword(string email);
+        public Task<List<UserInformationViewModel>> GetAllUserAsync();
     }
 }

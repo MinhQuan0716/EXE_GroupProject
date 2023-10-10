@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Primitives;
 
-namespace Application.ViewModel
+namespace Application.ViewModel.PaymentModel
 {
     public class PaymentResponseModel
-    {     
+    {
         public bool Success { get; set; }
         public string PaymentMethod { get; set; }
         public object OrderDescription { get; set; }
