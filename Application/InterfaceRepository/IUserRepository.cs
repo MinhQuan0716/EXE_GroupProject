@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 namespace Application.InterfaceRepository
 {
     public  interface IUserRepository:IGenericRepository<User>
-    {
-      
+    {     
         public Task<bool> CheckMailExisted(string email);
         public Task<User>FindUserByEmail(string email);
+        public Task<User> GetUserByEmailAsync(string email);
     }
 }

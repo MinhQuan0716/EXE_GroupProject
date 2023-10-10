@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Configuration;
 using Microsoft.Extensions.Configuration;
+using Application.Uitls;
 
 namespace Infrastructure
 {
@@ -29,6 +30,8 @@ namespace Infrastructure
             services.AddScoped<IUserResponseRepository , UserResponseRepository>();
             services.AddScoped<ISuggestionRepository, SuggestionRepository>();
             services.AddScoped<IMajorRepository, MajorRepository>();
+            services.AddScoped<ISendMailHelper, SendMailHelper>();
+            //services.AddTransient<IUserService, UserService>();
             services.AddScoped<IUnitOfWork,UnitOfWork>();
             services.AddDbContext<AppDbContext>(options =>
             {

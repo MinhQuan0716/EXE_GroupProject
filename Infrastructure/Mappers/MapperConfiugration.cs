@@ -14,8 +14,16 @@ namespace Infrastructure.Mappers
     {
         public MapperConfiugration()
         {
-            CreateMap<UserViewModel,User>().ReverseMap();
-            CreateMap<LoginWithEmailViewModel,User>().ReverseMap();
+            CreateMap<User, LoginWithEmailViewModel>()
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+                .ReverseMap();
+
+            CreateMap<User, UserViewModel>()
+                .ForMember(desc => desc._Id, src => src.MapFrom(u => u.Id))
+                .ReverseMap();
+
+            CreateMap<ResetPasswordDTO, User>()
+                .ForMember(rp => rp.Password, opt => opt.MapFrom(src => src.NewPassword)).ReverseMap();
         }
     }
 

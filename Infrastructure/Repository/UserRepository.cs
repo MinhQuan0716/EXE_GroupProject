@@ -36,5 +36,15 @@ namespace Infrastructure.Repository
         {
             return await _dbContext.Users.ToListAsync();
         }
+
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            var user = await _dbContext.Users.Include(u => u.Role).FirstOrDefaultAsync(e => e.Email == email);
+            if (user == null)
+            {
+                throw new Exception("UserName is not exist!");
+            }
+            return user;
+        }
     }
 }
