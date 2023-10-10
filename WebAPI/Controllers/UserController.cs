@@ -7,6 +7,7 @@ using Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace WebAPI.Controllers
 { 
@@ -94,5 +95,27 @@ namespace WebAPI.Controllers
             var token = await _jwtHandler.GenerateToken(user);
             return Ok(new AuthResponse { Token = token, IsAuthSuccessful = true });
         }*/
+
+        [HttpGet]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            var result = await _userService.SendResetPassword(email);
+            if (!result.IsNullOrEmpty())
+            {
+                return Ok();
+            }
+            else return BadRequest("Cannot find User");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordDTO resetObj)
+        {
+            var result = await _userService.ResetPassword(resetObj);
+            if (result)
+            {
+                return Ok(result);
+            }
+            else return BadRequest();
+        }
     }
 }

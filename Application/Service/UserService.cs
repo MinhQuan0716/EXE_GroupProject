@@ -5,6 +5,7 @@ using Application.Uitls;
 using Application.ViewModel;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -21,12 +22,17 @@ namespace Application.Service
         private readonly AppConfiguration _configuration;
         private readonly ICurrentTime _currentTime;
         private readonly IMapper _mapper;
-        public UserService(IUnitOfWork unitOfWork, AppConfiguration configuration, ICurrentTime currentTime, IMapper mapper)
+        private readonly IMemoryCache _memoryCache;
+        private readonly ISendMailHelper _sendMailHelper;
+
+        public UserService(IUnitOfWork unitOfWork, AppConfiguration configuration, ICurrentTime currentTime, IMapper mapper, IMemoryCache memoryCache, ISendMailHelper sendMailHelper)
         {
             _unitOfWork = unitOfWork;
             _configuration = configuration;
             _currentTime = currentTime;
             _mapper = mapper;
+            _memoryCache = memoryCache;
+            _sendMailHelper = sendMailHelper;
         }
 
         public async Task<Token> LoginAsync(LoginModel loginModel)
@@ -111,6 +117,74 @@ namespace Application.Service
         {
             await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.SaveChangeAsync();
+        }
+
+        public async Task<bool> ResetPassword(ResetPasswordDTO resetPasswordDTO)
+        {
+            string email;
+            _ = _memoryCache.TryGetValue(resetPasswordDTO.Code, out email);
+
+            if (email != null)
+            {
+                if (resetPasswordDTO.NewPassword.Equals(resetPasswordDTO.ConfirmPassword))
+                {
+                    var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+                    if (user != null)
+                    {
+                        resetPasswordDTO.NewPassword = resetPasswordDTO.NewPassword.Hash();
+                        _ = _mapper.Map(resetPasswordDTO, user, typeof(ResetPasswordDTO), typeof(User));
+                        _unitOfWork.UserRepository.Update(user);
+                        if (await _unitOfWork.SaveChangeAsync() > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                else
+                {
+                    throw new Exception("Password and Confirm Password is not match");
+                }
+            }
+            throw new Exception("Not exsited Code");
+        }
+
+        private static Random random = new Random();
+
+        public static string RandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public async Task<string> SendResetPassword(string email)
+        {
+            var user = await _unitOfWork.UserRepository.GetUserByEmailAsync(email);
+            if (user != null)
+            {
+                var key = UserService.RandomString(6);
+                //Get project's directory and fetch ForgotPasswordTemplate content from EmailTemplates
+                string exePath = Environment.CurrentDirectory.ToString();
+                if (exePath.Contains(@"\bin\Debug\net7.0"))
+                    exePath = exePath.Remove(exePath.Length - (@"\bin\Debug\net7.0").Length);
+                string FilePath = exePath + @"\EmailTemplates\ForgotPasswordTemplate.html";
+                StreamReader streamreader = new StreamReader(FilePath);
+                string MailText = streamreader.ReadToEnd();
+                streamreader.Close();
+                //Replace [resetpasswordkey] = key
+                MailText = MailText.Replace("[resetpasswordkey]", key);
+                //Replace [emailaddress] = email
+                MailText = MailText.Replace("[emailaddress]", email);
+                var result = await _sendMailHelper.SendMailAsync(email, "ResetPassword", MailText);
+                if (!result) return string.Empty;
+
+                _memoryCache.Set(key, email, DateTimeOffset.Now.AddMinutes(10));
+                return key;
+            }
+            else
+            {
+                throw new Exception("User not available");
+            }
         }
     }
 }

@@ -23,7 +23,8 @@ namespace Infrastructure.Mappers
                 .ForMember(desc => desc._Id, src => src.MapFrom(u => u.Id))
                 .ReverseMap();
 
-            
+            CreateMap<ResetPasswordDTO, User>()
+                .ForMember(rp => rp.Password, opt => opt.MapFrom(src => src.NewPassword)).ReverseMap();
         }
     }
 
