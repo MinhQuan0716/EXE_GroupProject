@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Application.ViewModel
+namespace Application.ViewModel.UserModel
 {
-    public  class Token
+    public class Token
     {
         public string Username { get; set; }
         public string RefreshToken { get; set; }

@@ -1,9 +1,10 @@
 ﻿using Application;
 using Application.InterfaceService;
 using Application.Uitls;
-using Application.ViewModel;
+using Application.ViewModel.UserModel;
 using AutoMapper;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -120,6 +121,28 @@ namespace WebAPI.Controllers
                 return Ok(result);
             }
             else return BadRequest();
+        }
+        [Authorize(Roles ="Admin")]
+        [HttpDelete]
+        public async Task<IActionResult> BanUser(Guid userId)
+        {
+            bool isBanned= await _userService.BanUser(userId);
+            if(isBanned)
+            {
+                return NoContent();
+            }
+            return BadRequest();
+        }
+        [Authorize(Roles="Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllUser()
+        {
+            List<UserInformationViewModel> users = await _userService.GetAllUserAsync();
+            if(users.Count == 0)
+            {
+                return NoContent();
+            }
+            return Ok(users);
         }
     }
 }
