@@ -33,7 +33,9 @@ jobs:
         with:
           name: .net-app
           path: ${{env.DOTNET_ROOT}}/myapp
- 
+      - name: Remove artifacts
+        uses: c-hive/gha-remove-artifacts@v1.2.0
+            
   deploy:
     runs-on: windows-latest
     needs: build
