@@ -8,6 +8,7 @@ namespace Application.ViewModel.UserModel
 {
     public  class UserInformationViewModel
     {
+        public Guid UserId { get; set; }
         public string UserName { get; set; }
         public string Email { get; set; }
         public DateTime BirthDay { get; set; }
